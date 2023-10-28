@@ -1,24 +1,12 @@
 from fastapi import FastAPI
 
+# Importando rutas y controladores
+import controllers.usuario as usuarioController
+
 app = FastAPI()
 
 @app.get("/")
-def read_root():
+def test():
     return {"estado": "Funcionando Israel"}
 
-
-#@app.post("/")
-
-#@app.put("/")
-
-#@app.patch("/")
-
-""" @app.delete("/")
-asdsad
-asdsa
-d
-sad
-sad
-as
-dsad
- """
+app.include_router(usuarioController.rutas)
