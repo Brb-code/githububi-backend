@@ -1,5 +1,7 @@
 # Unificando routas con controladores
 from fastapi import APIRouter
+# Importando servicios
+from services.usuario import listar_usuarios
 
 rutas = APIRouter()
 
@@ -9,7 +11,9 @@ url = "/usuario"
 
 @rutas.get(url)
 def lista_usuarios():
-    return []
+    resultado = listar_usuarios()
+    print(resultado)
+    return resultado
 
 @rutas.get(url + "/{id}")
 def obtiene_usuario(id:int):
