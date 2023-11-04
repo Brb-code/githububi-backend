@@ -1,7 +1,8 @@
 # Unificando routas con controladores
 from fastapi import APIRouter
 # Importando servicios
-from services.usuario import listar_usuarios
+from services.usuario import listar_usuarios, obtener_usuario_x_id
+from common.res import responder_json
 
 rutas = APIRouter()
 
@@ -9,15 +10,17 @@ url = "/usuario"
 
 #Create Read Update Delete
 
-@rutas.get(url)
+@rutas.get(url,
+           response_model=[])
 def lista_usuarios():
     resultado = listar_usuarios()
-    print(resultado)
-    return resultado
+    return responder_json(200, "OK", resultado)
 
 @rutas.get(url + "/{id}")
-def obtiene_usuario(id:int):
-    return {}
+def obtiene_usuario(id:str):
+    usuario = obtener_usuario_x_id(int(id))
+    print(usuario)
+    return responder_json(200, "ok",usuario)
 
 @rutas.post(url)
 def registra_usuario(elemento:object):
