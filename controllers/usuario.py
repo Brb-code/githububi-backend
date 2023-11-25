@@ -1,8 +1,8 @@
 # Unificando routas con controladores
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 # Importando servicios
-from services.usuario import listar_usuarios, obtener_usuario_x_id
-from common.res import responder_json
+from services.usuario import listar, obtener_x_id, crear, actualizar, eliminar
+from common.res import verificar_token
 
 rutas = APIRouter()
 
@@ -13,23 +13,26 @@ url = "/usuario"
 @rutas.get(url,
            response_model=[])
 def lista_usuarios():
-    resultado = listar_usuarios()
-    return responder_json(200, "OK", resultado)
-
+    resultado = listar()
+    return resultado
+    
 @rutas.get(url + "/{id}")
-def obtiene_usuario(id:str):
-    usuario = obtener_usuario_x_id(int(id))
-    print(usuario)
-    return responder_json(200, "ok",usuario)
+def obtiene_usuario(id:str, current_token: str = Depends(verificar_token)):
+    if current_token:
+        resultado = obtener_x_id(int(id))
+        return resultado
 
 @rutas.post(url)
-def registra_usuario(elemento:object):
-    return {}
+def registra_usuario(nombre:str, password:str, email:str, cuenta_github:str, celular:str):
+    resultado = crear(nom=nombre, passw=password, ema=email, git=cuenta_github,cel=celular)
+    return resultado
 
 @rutas.put(url + "/{id}")
-def actualiza_usuario(id:int, elemento:object):
-    return {}
+def actualiza_usuario(id:int, nombre:str, password:str, email:str, cuenta_github:str, celular:str):
+    resultado = actualizar(int(id), nom=nombre, passw=password, ema=email, git=cuenta_github,cel=celular)
+    return resultado
 
 @rutas.delete(url + "/{id}")
 def elimina_usuario(id:int):
-    return {}
+    resultado = eliminar(int(id))
+    return resultado

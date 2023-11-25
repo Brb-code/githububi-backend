@@ -1,3 +1,7 @@
+from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, Request
+
+
 def responder_json(estado:int, mensaje:str, datos:object):
     # Estadarizacion de datos
     # Procesamiento de la variable datos
@@ -32,3 +36,14 @@ def responder_html():
 
 def responder_pdf():
     return {}
+
+
+def verificar_token(req: Request):
+    token = req.headers.get('authorization')
+    if not token:
+        raise HTTPException(
+            status_code=401,
+            detail="No se proporcionó el token de autenticación",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return True
