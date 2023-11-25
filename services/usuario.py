@@ -15,6 +15,7 @@ def crear(nom:str, passw:str, ema:str, git:str, cel:str):
     session.commit()
     session.refresh(tmp)
     return tmp
+
 def actualizar(id:int, nom:str, passw:str, ema:str, git:str, cel:str):
     tmp = obtener_x_id(id)
     if tmp:
@@ -37,3 +38,7 @@ def eliminar(id:int):
         return {"respuesta":True}
     else:
         return {"respuesta":False}
+    
+def login(nombre:str, passw: str):
+    one = session.query(Usuario).filter(Usuario.nombre == nombre and Usuario.password == passw)
+    return one.first()

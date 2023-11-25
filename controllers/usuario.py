@@ -1,7 +1,7 @@
 # Unificando routas con controladores
 from fastapi import APIRouter, Depends
 # Importando servicios
-from services.usuario import listar, obtener_x_id, crear, actualizar, eliminar
+from services.usuario import listar, obtener_x_id, crear, actualizar, eliminar, login
 from common.res import verificar_token
 
 rutas = APIRouter()
@@ -17,10 +17,12 @@ def lista_usuarios():
     return resultado
     
 @rutas.get(url + "/{id}")
-def obtiene_usuario(id:str, current_token: str = Depends(verificar_token)):
-    if current_token:
+def obtiene_usuario(id:str, token_usuario:str = Depends(verificar_token)):
+    if token_usuario:
         resultado = obtener_x_id(int(id))
         return resultado
+    else:
+        return False
 
 @rutas.post(url)
 def registra_usuario(nombre:str, password:str, email:str, cuenta_github:str, celular:str):
@@ -36,3 +38,11 @@ def actualiza_usuario(id:int, nombre:str, password:str, email:str, cuenta_github
 def elimina_usuario(id:int):
     resultado = eliminar(int(id))
     return resultado
+
+@rutas.post(url + "/login")
+def iniciar_sesion(nombre:str, password:str):
+    resultado = login(nombre=nombre, passw=password)
+    if resultado:
+        return {"token": resultado.id_usuario}
+    else:
+        return {"token": None}

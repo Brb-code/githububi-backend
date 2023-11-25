@@ -39,6 +39,7 @@ def responder_pdf():
 
 
 def verificar_token(req: Request):
+    print(req.headers)
     token = req.headers.get('authorization')
     if not token:
         raise HTTPException(
@@ -46,4 +47,5 @@ def verificar_token(req: Request):
             detail="No se proporcionó el token de autenticación",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return True
+    # Proceso de desifrar informaciòn del token
+    return token
